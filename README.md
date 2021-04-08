@@ -13,9 +13,11 @@ This script installs the latest matrix-synapse distribution from the official re
 * A server that runs a reasonably modern Debian based OS. Tested on Debian Stable 10.8.
 * Correct firewall settings (we need 80, 443, 8008, 8448)
 * A domain name with correctly configured DNS records:
-
-``example.com. IN A IP.OF.YOUR.SERVER``  
-``matrix.example.com. IN CNAME example.com.``
+```
+example.com. IN A IP.OF.YOUR.SERVER
+matrix.example.com. IN CNAME example.com.
+```
+This script handles subdomains perfectly fine, so if you wanted to put matrix on, say, chat.example.com, that will work. In that case, set your DNS entry to ``matrix.chat.example.com``
 
 You do not need to bother with SRV records as this script will configure nginx to serve the .well-known/matrix files dynamically from within nginx itself.
 
