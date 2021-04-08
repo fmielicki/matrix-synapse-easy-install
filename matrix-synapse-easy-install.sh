@@ -78,6 +78,10 @@ server {
 
         include /etc/nginx/conf.d/ssl.conf;
 
+        location / {
+                proxy_pass https://localhost:8448;
+        }
+
         location /_matrix {
                 proxy_pass http://localhost:8008;
                 proxy_set_header X-Forwarded-For $remote_addr;
@@ -116,7 +120,7 @@ echo "INFO - waiting up to 10 seconds to ensure nginx is started properly"
 systemctl restart nginx
 systemctl restart matrix-synapse
 sleep 10;
-curl -f -s https://$DOMAIN:8448 > /dev/null
+curl -f -s https://$DOMAIN > /dev/null
 if [[ $? -eq 0 ]]
 then
 	echo "OK - Matrix seems to be up and running!";
@@ -125,7 +129,7 @@ else
 	echo "FAIL - irrecoverable error, quitting";
 	exit 128
 fi
-echo "INFO - The static Matrix page should be up already at https://$DOMAIN:8448";
+echo "INFO - The static Matrix page should be up already at https://$DOMAIN";
 echo "INFO - Creating your first user (you probably want this to be an admin)";
 register_new_matrix_user -c /etc/matrix-synapse/conf.d/register.yaml https://127.0.0.1:8448
 echo "INFO - Test if your server federates correctly at https://federationtester.matrix.org/#$DOMAIN"
