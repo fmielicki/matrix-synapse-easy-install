@@ -9,6 +9,8 @@ This script installs the latest matrix-synapse distribution from the official re
 * Install matrix-synapse-py3
 * Configure nginx as a reverse proxy to serve Matrix requests
 
+This does not come with PostgreSQL. Should you want to use PostgreSQL instead of the built-in sqlite database, I'm referring you to the great guide over at matrix-org/synapse: [Using Postgres](https://github.com/matrix-org/synapse/blob/master/docs/postgres.md)
+
 # What do I need
 * A server that runs a reasonably modern Debian based OS. Tested on Debian Stable 10.8.
 * Correct firewall settings (we need 80, 443, 8008, 8448)
