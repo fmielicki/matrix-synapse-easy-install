@@ -10,6 +10,7 @@ echo "A delegation like chat.example.com with Matrix residing at matrix.chat.exa
 echo "In that case, just enter chat.example.com";
 echo "";
 read -p "Do you want to continue? [Y/n] " -n 1 -r
+echo;
 if [[ $REPLY =~ ^[Nn]$ ]]
 then
     exit 1
@@ -41,7 +42,8 @@ echo "INFO - performing initial configuration";
 echo "registration_shared_secret: $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)" > /etc/matrix-synapse/conf.d/register.yaml
 echo "enable_registration: false" >> /etc/matrix-synapse/conf.d/register.yaml
 echo "";
-echo "Do you want certbot to automatically obtain an SSL Certificate and install it for you? (Powered by Let's Encrypt) [Y/n] "
+read -p "Do you want certbot to automatically obtain an SSL Certificate and install it for you? (Powered by Let's Encrypt) [Y/n] " -n 1 -r
+echo;
 if [[ ! $REPLY =~ ^[Nn]$ ]]
 then
     echo "INFO - fetching certificate"
@@ -97,7 +99,7 @@ server {
         }
 
         location ~ ^/.well-known/matrix/client$ {
-                return 200 '{\"m.homeserver\": {\"base_url\": \"https://$DOMAIN\"},\"m.identity_server: {\"base_url\": \"https://vector.im\"}}';
+                return 200 '{\"m.homeserver\": {\"base_url\": \"https://$DOMAIN\"},\"m.identity_server\": {\"base_url\": \"https://vector.im\"}}';
                 add_header Content-Type application/json;
                 add_header \"Access-Control-Allow-Origin\" *;
         }
