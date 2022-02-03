@@ -131,6 +131,12 @@ else
 	echo "FAIL - irrecoverable error, quitting";
 	exit 128
 fi
+echo "INFO - Configuring automatic certificate renewal";
+mkdir /tmp/matrix-synapse-easy-install
+crontab -l > /tmp/matrix-synapse-easy-install/cron
+echo "30 4 1 * * systemctl stop nginx && certbot renew; systemctl start nginx"
+crontab /tmp/matrix-synapse-easy-install/cron
+rm -rf /tmp/matrix-synapse-easy-install
 echo "INFO - The static Matrix page should be up already at https://$DOMAIN";
 echo "INFO - Creating your first user (you probably want this to be an admin)";
 register_new_matrix_user -c /etc/matrix-synapse/conf.d/register.yaml https://127.0.0.1:8448
