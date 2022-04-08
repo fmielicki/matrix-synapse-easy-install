@@ -12,7 +12,7 @@ This script installs the latest matrix-synapse distribution from the official re
 This does not come with PostgreSQL. Should you want to use PostgreSQL instead of the built-in sqlite database, I'm referring you to the great guide over at matrix-org/synapse: [Using Postgres](https://github.com/matrix-org/synapse/blob/master/docs/postgres.md)
 
 # What do I need
-* A server that runs a reasonably modern Debian based OS. Tested on Debian Stable 10.8.
+* A server that runs a reasonably modern Debian based OS.
 * Correct firewall settings (we need 80, 443, 8008, 8448)
 * A domain name with correctly configured DNS records:
 ```
@@ -28,5 +28,12 @@ Obtain the ``matrix-synapse-easy-install.sh`` file, make it executable and run i
 
 For the lazy folks, running this script unchecked, this is a one-liner which should do it (please note that this requires wget which might not come with e.g. Debian):  
 ``wget https://raw.githubusercontent.com/ephidrineon/matrix-synapse-easy-install/main/matrix-synapse-easy-install.sh && chmod +x ./matrix-synapse-easy-install.sh && sudo ./matrix-synapse-easy-install.sh``
+
+# Testing and reporting bugs
+I'm always looking for people to test my script on different systems.
+
+Tested working on:
+* Debian 10
+* Ubuntu 20.04
 
 
