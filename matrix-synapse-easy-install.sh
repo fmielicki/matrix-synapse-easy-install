@@ -29,7 +29,9 @@ dnf update
 dnf install -y nginx curl wget certbot
 echo "INFO - Installing Matrix core";
 dnf install -y matrix-synapse
-python -m synapse.app.homeserver --server-name $DOMAIN --config-path /etc/synapse/homeserver.yaml --generate-config --report-stats=no
+echo "Enter the domain you want Matrix to run on: "
+read DOMAIN
+python -m synapse.app.homeserver -H $DOMAIN --config-path /etc/synapse/homeserver.yaml --generate-config --config-directory /etc/synapse/conf.d --report-stats=no
 firewall-cmd --permanent --add-service=http --add-service=https 
 firewall-cmd --permanent --add-port=8448/tcp --add-port=8008/tcp
 sleep 10
@@ -49,7 +51,6 @@ echo;
 if [[ ! $REPLY =~ ^[Nn]$ ]]
 then
     echo "INFO - fetching certificate"
-	DOMAIN=$(tail -n1 /etc/synapse/conf.d/server_name.yaml | cut -f2 -d":" | sed 's/ //g')
 	systemctl stop nginx
 	certbot certonly --standalone -d $DOMAIN -d matrix.$DOMAIN -d element.$DOMAIN --agree-tos -n -m webmaster@$DOMAIN
 	systemctl start nginx
