@@ -29,7 +29,7 @@ dnf install -y matrix-synapse
 python -m synapse.app.homeserver --server-name host.domain.name --config-path /etc/synapse/homeserver.yaml --generate-config --report-stats=no
 firewall-cmd --permanent --add-service=http --add-service=https --add-port=8448/tcp --add-port=8008/tcp
 sleep 10
-if [ -f "/etc/matrix-synapse/homeserver.yaml" ]
+if [ -f "/etc/synapse/homeserver.yaml" ]
 then
 	echo "OK - Matrix core installed"
 else
