@@ -22,15 +22,10 @@ then
 fi
 echo "INFO - Installing prerequisites";
 echo "INFO - Updating mirrors";
-apt update
-apt install -y nginx curl wget lsb-release apt-transport-https certbot
-echo "INFO - Adding Matrix mirrors";
-wget -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/matrix-org.list
-echo "INFO - Updating mirrors";
-apt update
+dnf update
+dnf install -y nginx curl wget lsb-release apt-transport-https certbot
 echo "INFO - Installing Matrix core";
-apt install -y matrix-synapse-py3
+dnf install matrix-synapse
 if [ -f "/etc/matrix-synapse/homeserver.yaml" ]
 then
 	echo "OK - Matrix core installed"

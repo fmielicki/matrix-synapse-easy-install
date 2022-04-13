@@ -29,8 +29,4 @@ Obtain the ``matrix-synapse-easy-install.sh`` file, make it executable and run i
 # Testing and reporting bugs
 I'm always looking for people to test my script on different systems.
 
-Tested working on:
-* Debian 10
-* Ubuntu 20.04
-
 If you're getting bugs or have any other issues, please open an issue or, if you know how to fix it, submit a pull request.
