@@ -23,9 +23,12 @@ fi
 echo "INFO - Installing prerequisites";
 echo "INFO - Updating mirrors";
 dnf update
-dnf install -y nginx curl wget lsb-release apt-transport-https certbot
+dnf install -y nginx curl wget lsb-release certbot
 echo "INFO - Installing Matrix core";
-dnf install matrix-synapse
+dnf install -y matrix-synapse
+python -m synapse.app.homeserver --server-name host.domain.name --config-path /etc/synapse/homeserver.yaml --generate-config --report-stats=no
+firewall-cmd --permanent --add-service=http --add-service=https --add-port=8448/tcp --add-port=8008/tcp
+sleep 10
 if [ -f "/etc/matrix-synapse/homeserver.yaml" ]
 then
 	echo "OK - Matrix core installed"
@@ -34,15 +37,15 @@ else
 	exit 2
 fi
 echo "INFO - performing initial configuration";
-echo "registration_shared_secret: $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)" > /etc/matrix-synapse/conf.d/register.yaml
-echo "enable_registration: false" >> /etc/matrix-synapse/conf.d/register.yaml
+echo "registration_shared_secret: $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)" > /etc/synapse/conf.d/register.yaml
+echo "enable_registration: false" >> /etc/synapse/conf.d/register.yaml
 echo "";
 read -p "Do you want certbot to automatically obtain an SSL Certificate and install it for you? (Powered by Let's Encrypt) [Y/n] " -n 1 -r
 echo;
 if [[ ! $REPLY =~ ^[Nn]$ ]]
 then
     echo "INFO - fetching certificate"
-	DOMAIN=$(tail -n1 /etc/matrix-synapse/conf.d/server_name.yaml | cut -f2 -d":" | sed 's/ //g')
+	DOMAIN=$(tail -n1 /etc/synapse/conf.d/server_name.yaml | cut -f2 -d":" | sed 's/ //g')
 	systemctl stop nginx
 	certbot certonly --standalone -d $DOMAIN -d matrix.$DOMAIN -d element.$DOMAIN --agree-tos -n -m webmaster@$DOMAIN
 	systemctl start nginx
@@ -134,7 +137,7 @@ crontab /tmp/matrix-synapse-easy-install/cron
 rm -rf /tmp/matrix-synapse-easy-install
 echo "INFO - The static Matrix page should be up already at https://$DOMAIN";
 echo "INFO - Creating your first user (you probably want this to be an admin)";
-register_new_matrix_user -c /etc/matrix-synapse/conf.d/register.yaml https://127.0.0.1:8448
+register_new_matrix_user -c /etc/synapse/conf.d/register.yaml https://127.0.0.1:8448
 echo "INFO - Test if your server federates correctly at https://federationtester.matrix.org/#$DOMAIN"
 echo "OK - Matrix should be up and running. Nothing to do here!"
 echo "Thank you for using my script!"
