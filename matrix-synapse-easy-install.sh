@@ -9,6 +9,7 @@ echo "If you want to run Matrix on example.com, DO NOT enter matrix.example.com.
 echo "A delegation like chat.example.com with Matrix residing at matrix.chat.example.com is entirely possible.";
 echo "In that case, just enter chat.example.com";
 echo "";
+echo "Also an INFO for users of RHEL based systems: SELinux will be temporarily disabled while running this script.";
 read -p "Do you want to continue? [Y/n] " -n 1 -r
 echo;
 if [[ $REPLY =~ ^[Nn]$ ]]
@@ -20,14 +21,17 @@ then
 	echo "ERR - you need to run this script as root";
 	exit 1;
 fi
+echo "INFO - Disabling SELinux";
+setenforce 0
 echo "INFO - Installing prerequisites";
 echo "INFO - Updating mirrors";
 dnf update
-dnf install -y nginx curl wget lsb-release certbot
+dnf install -y nginx curl wget certbot
 echo "INFO - Installing Matrix core";
 dnf install -y matrix-synapse
-python -m synapse.app.homeserver --server-name host.domain.name --config-path /etc/synapse/homeserver.yaml --generate-config --report-stats=no
-firewall-cmd --permanent --add-service=http --add-service=https --add-port=8448/tcp --add-port=8008/tcp
+python -m synapse.app.homeserver --server-name $DOMAIN --config-path /etc/synapse/homeserver.yaml --generate-config --report-stats=no
+firewall-cmd --permanent --add-service=http --add-service=https 
+firewall-cmd --permanent --add-port=8448/tcp --add-port=8008/tcp
 sleep 10
 if [ -f "/etc/synapse/homeserver.yaml" ]
 then
@@ -135,6 +139,8 @@ crontab -l > /tmp/matrix-synapse-easy-install/cron
 echo "30 4 1 * * systemctl stop nginx && certbot renew; systemctl start nginx"
 crontab /tmp/matrix-synapse-easy-install/cron
 rm -rf /tmp/matrix-synapse-easy-install
+echo "INFO - enabling SELinux";
+setenforce 1
 echo "INFO - The static Matrix page should be up already at https://$DOMAIN";
 echo "INFO - Creating your first user (you probably want this to be an admin)";
 register_new_matrix_user -c /etc/synapse/conf.d/register.yaml https://127.0.0.1:8448
