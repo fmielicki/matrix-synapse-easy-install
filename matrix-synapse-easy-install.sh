@@ -62,9 +62,10 @@ else
 	echo "INFO - Leaving SSL unconfigured"
 	echo "WARN - This scipt might FAIL if your certificate is not configured properly (by you)!"
 fi
+mkdir -p /etc/nginx/snippets
 echo "INFO - Configuring nginx to run with our certificate";
 echo "ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;" > /etc/nginx/conf.d/ssl.conf
+ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;" > /etc/nginx/snippets/ssl.conf
 echo "INFO - Setting up virtual hosts in nginx";
 echo "server {
         listen 80;
@@ -76,7 +77,7 @@ server {
         listen 443 ssl;
         server_name $DOMAIN;
 
-        include /etc/nginx/conf.d/ssl.conf;
+        include /etc/nginx/snippets/ssl.conf;
 
         location / {
                 proxy_pass https://localhost:8448;
@@ -107,14 +108,13 @@ server {
         listen 8448 ssl;
         server_name $DOMAIN;
 
-        include /etc/nginx/conf.d/ssl.conf;
+        include /etc/nginx/snippets/ssl.conf;
 
         location / {
                 proxy_pass http://localhost:8008;
                 proxy_set_header X-Forwarded-For \$remote_addr;
         }
-}" > /etc/nginx/sites-available/matrix
-ln -s /etc/nginx/sites-available/matrix /etc/nginx/sites-enabled/
+}" > /etc/nginx/conf.d/matrix.conf
 echo "INFO - restarting nginx"
 echo "INFO - waiting up to 10 seconds to ensure nginx is started properly"
 systemctl restart nginx
