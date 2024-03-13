@@ -27,7 +27,7 @@ You do not need to bother with SRV records as this script will configure nginx t
 Obtain the ``matrix-synapse-easy-install.sh`` file, make it executable and run it.
 
 For the lazy folks, running this script unchecked, this is a one-liner which should do it (please note that this requires wget which might not come with e.g. Debian):  
-``wget https://raw.githubusercontent.com/ephidrineon/matrix-synapse-easy-install/main/matrix-synapse-easy-install.sh && chmod +x ./matrix-synapse-easy-install.sh && sudo ./matrix-synapse-easy-install.sh``
+``wget https://raw.githubusercontent.com/fmielicki/matrix-synapse-easy-install/main/matrix-synapse-easy-install.sh && chmod +x ./matrix-synapse-easy-install.sh && sudo ./matrix-synapse-easy-install.sh``
 
 # Testing and reporting bugs
 I'm always looking for people to test my script on different systems.
