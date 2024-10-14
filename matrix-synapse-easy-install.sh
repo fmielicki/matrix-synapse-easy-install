@@ -139,7 +139,7 @@ crontab /tmp/matrix-synapse-easy-install/cron
 rm -rf /tmp/matrix-synapse-easy-install
 echo "INFO - The static Matrix page should be up already at https://$DOMAIN";
 echo "INFO - Creating your first user (you probably want this to be an admin)";
-register_new_matrix_user -c /etc/matrix-synapse/conf.d/register.yaml https://127.0.0.1:8448
+register_new_matrix_user -c /etc/matrix-synapse/conf.d/register.yaml http://127.0.0.1:8448
 echo "INFO - Test if your server federates correctly at https://federationtester.matrix.org/#$DOMAIN"
 echo "OK - Matrix should be up and running. Nothing to do here!"
 echo "Thank you for using my script!"
